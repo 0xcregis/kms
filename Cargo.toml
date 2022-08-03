@@ -1,0 +1,36 @@
+[package]
+name = "hds"
+version = "0.1.0"
+edition = "2021"
+
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+[lib]
+name="hds"
+path="src/lib.rs"
+# crate-type = ["dylib"]
+
+[dependencies]
+rustc-hash = "1.1.0"
+rand = "0.8.0"
+sha2 = "0.10.2"
+hmac = "0.12.1"
+bs58 = { version = "0.4", default-features = false, features = ["check"] }
+pbkdf2 = { version = "0.11.0", default-features = false }
+unicode-normalization = "0.1.13"
+anyhow = "1.0.34"
+thiserror = "1.0.22"
+zeroize = { version = "1.5.5", default-features = false }
+once_cell = { version = "1.8.0" }
+subtle = { version = "2", default-features = false }
+ripemd = "0.1.1"
+hex = "0.4.2"
+libsecp256k1 = { version = "0.7.1"}
+
+[dev-dependencies]
+hex-literal = "0.3"
+
+[features]
+default = ["std"]
+alloc = ["zeroize/alloc"]
+std = ["alloc"]
