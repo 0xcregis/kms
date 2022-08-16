@@ -28,59 +28,8 @@ pub trait PrivateKey: Sized {
     fn public_key(&self) -> Self::PublicKey;
 }
 
-/*
-impl PrivateKey for k256::SecretKey {
-    type PublicKey = k256::PublicKey;
 
-    fn from_bytes(bytes: &PrivateKeyBytes) -> Result<Self> {
-        Ok(k256::SecretKey::from_be_bytes(bytes)?)
-    }
-
-    fn to_bytes(&self) -> PrivateKeyBytes {
-        k256::SecretKey::to_be_bytes(self).into()
-    }
-
-    fn derive_child(&self, other: PrivateKeyBytes) -> Result<Self> {
-        let child_scalar =
-            Option::<k256::NonZeroScalar>::from(k256::NonZeroScalar::from_repr(other.into()))
-                .ok_or(Error::Crypto)?;
-
-        let derived_scalar = self.to_nonzero_scalar().as_ref() + child_scalar.as_ref();
-
-        Option::<k256::NonZeroScalar>::from(k256::NonZeroScalar::new(derived_scalar))
-            .map(Into::into)
-            .ok_or(Error::Crypto)
-    }
-
-    fn public_key(&self) -> Self::PublicKey {
-        k256::SecretKey::public_key(self)
-    }
-}
-
-
-impl PrivateKey for k256::ecdsa::SigningKey {
-    type PublicKey = k256::ecdsa::VerifyingKey;
-
-    fn from_bytes(bytes: &PrivateKeyBytes) -> Result<Self> {
-        Ok(k256::ecdsa::SigningKey::from_bytes(bytes)?)
-    }
-
-    fn to_bytes(&self) -> PrivateKeyBytes {
-        k256::ecdsa::SigningKey::to_bytes(self).into()
-    }
-
-    fn derive_child(&self, other: PrivateKeyBytes) -> Result<Self> {
-        k256::SecretKey::from(self)
-            .derive_child(other)
-            .map(Into::into)
-    }
-
-    fn public_key(&self) -> Self::PublicKey {
-        self.verifying_key()
-    }
-}
-*/
-impl PrivateKey for libsecp256k1::SecretKey{
+impl PrivateKey for libsecp256k1::SecretKey {
     type PublicKey = libsecp256k1::PublicKey;
 
     fn from_bytes(bytes: &PrivateKeyBytes) -> Result<Self>{
@@ -122,21 +71,6 @@ impl From<&XPrv> for libsecp256k1::SecretKey {
     }
 }
 
-/* 
-impl From<XPrv> for k256::ecdsa::SigningKey {
-    fn from(xprv: XPrv) -> k256::ecdsa::SigningKey {
-        k256::ecdsa::SigningKey::from(&xprv)
-    }
-}
-
-
-impl From<&XPrv> for k256::ecdsa::SigningKey {
-    fn from(xprv: &XPrv) -> k256::ecdsa::SigningKey {
-        xprv.private_key().clone()
-    }
-}
-*/
-
 #[cfg(test)]
 mod tests {
     use hex_literal::hex;
@@ -153,7 +87,7 @@ mod tests {
         );
 
         let path = "m/0/2147483647'/1/2147483646'/2";
-        let xprv = XPrv::derive_from_path(&seed, &path.parse().unwrap()).unwrap();
+        let xprv = XPrv::new_from_path(&seed, &path.parse().unwrap()).unwrap();
 
         assert_eq!(
             xprv,

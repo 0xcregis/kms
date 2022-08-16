@@ -31,6 +31,7 @@ impl Seed {
     /// [Mnemonic]: ./mnemonic/struct.Mnemonic.html
     pub fn new(mnemonic: &Mnemonic, password: &str) -> Self {
         let salt = format!("mnemonic{}", password);
+        //let salt = format!("Bitcoin seed{}", password);
         let normalized_salt = salt.nfkd().to_string();
         let bytes = pbkdf2(mnemonic.phrase().as_bytes(), &normalized_salt);
 
@@ -96,8 +97,7 @@ mod test {
     #[cfg(target_arch = "wasm32")]
     use wasm_bindgen_test::*;
 
-    #[cfg_attr(all(target_arch = "wasm32"), wasm_bindgen_test)]
-    #[cfg_attr(not(target_arch = "wasm32"), test)]
+    #[test]
     fn seed_hex_format() {
         let entropy = &[
             0x33, 0xE4, 0x6B, 0xB1, 0x3A, 0x74, 0x6E, 0xA4, 0x1C, 0xDD, 0xE4, 0x5C, 0x90, 0x84,
@@ -180,4 +180,6 @@ mod test {
             "cff9ffd2b23549e73601db4129a334c81b28a40f0ee819b5d6a54c409999f0dfb6b89df17cae6408c96786165c205403d283baadc03ffdd391a490923b7d9493",
         );
     }
+
+
 }

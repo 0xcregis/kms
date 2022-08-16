@@ -1,4 +1,4 @@
 # HDS
 Hierarchical Determinative Schema
 ## Introduction
-Rust implemetation of BIP32、BIP39
+Rust implement of BIP32、BIP39

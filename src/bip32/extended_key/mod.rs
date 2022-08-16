@@ -159,4 +159,25 @@ mod tests {
         );
         assert_eq!(&xpub.to_string(), xpub_base58);
     }
+
+    fn debug_extend_key(ek : &ExtendedKey){
+        println!("prefix:{}",ek.prefix.as_str());
+        println!("depth:{}",ek.attrs.depth);
+        println!("parent_fingerprint:{}",hex::encode(ek.attrs.parent_fingerprint));
+        println!("child_number:{}",ek.attrs.child_number);
+        println!("chain_code:{}",hex::encode(ek.attrs.chain_code));
+        println!("key_bytes:{}",hex::encode(ek.key_bytes));
+    }
+
+    #[test]
+    fn test_master_xprv(){
+        let xprv_base58 = "xprv9s21ZrQH143K3BMzbzRA1EtW4bTSDzvzPWeyUjjw6DdBGwM3GDNgd7wyAmy8R6KayQHRuTVQG4yvACbv4HLsyc9BPEGzu8GtYFTZTdncGnJ";
+
+        let xprv = xprv_base58.parse::<ExtendedKey>().unwrap();
+        debug_extend_key(&xprv);
+
+        let xprv_base58_2 = "xprv9s21ZrQH143K4UgTbVuwLxTrB8u488uJxogG9CA7eAEL7hmcPtyG7zT8BtpmvibJQ8q1nxnXRUpQAo1BVa9tbvXery13KY1dSsC5A155c5k";
+        let xprv2 = xprv_base58_2.parse::<ExtendedKey>().unwrap();
+        debug_extend_key(&xprv2);
+    }
 }

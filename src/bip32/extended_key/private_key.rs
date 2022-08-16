@@ -51,7 +51,7 @@ where
 
     /// Derive a child key from the given [`DerivationPath`].
     
-    pub fn derive_from_path<S>(seed: S, path: &DerivationPath) -> Result<Self>
+    pub fn new_from_path<S>(seed: S, path: &DerivationPath) -> Result<Self>
     where
         S: AsRef<[u8]>,
     {
@@ -83,6 +83,13 @@ where
         };
 
         Ok(ExtendedPrivateKey { private_key, attrs })
+    }
+
+    pub fn derive_from_path(self, path: &DerivationPath) -> Result<Self>
+    {
+        path.iter().fold(Ok(self), |maybe_key, child_num| {
+            maybe_key.and_then(|key| key.derive_child(child_num))
+        })
     }
 
     /// Derive a child key for a particular [`ChildNumber`].
