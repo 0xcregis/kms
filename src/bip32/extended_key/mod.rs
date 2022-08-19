@@ -1,8 +1,8 @@
 //! Parser for extended key types (i.e. `xprv` and `xpub`)
 
 pub(crate) mod attrs;
-pub(crate) mod private_key;
-pub(crate) mod public_key;
+pub(crate) mod extended_private_key;
+pub(crate) mod extended_public_key;
 
 use crate::bip32::{ChildNumber, Error, ExtendedKeyAttrs, Prefix, Result, Version, KEY_SIZE};
 use core::{

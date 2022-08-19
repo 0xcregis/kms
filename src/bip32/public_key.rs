@@ -34,50 +34,6 @@ pub trait PublicKey: Sized {
     }
 }
 
-/* 
-impl PublicKey for k256::PublicKey {
-    fn from_bytes(bytes: PublicKeyBytes) -> Result<Self> {
-        Ok(k256::PublicKey::from_sec1_bytes(&bytes)?)
-    }
-
-    fn to_bytes(&self) -> PublicKeyBytes {
-        self.to_encoded_point(true)
-            .as_bytes()
-            .try_into()
-            .expect("malformed public key")
-    }
-
-    fn derive_child(&self, other: PrivateKeyBytes) -> Result<Self> {
-        let child_scalar =
-            Option::<k256::NonZeroScalar>::from(k256::NonZeroScalar::from_repr(other.into()))
-                .ok_or(Error::Crypto)?;
-
-        let child_point = self.to_projective() + (k256::AffinePoint::generator() * *child_scalar);
-        Self::from_affine(child_point.into()).map_err(|_| Error::Crypto)
-    }
-}
-
-
-impl PublicKey for k256::ecdsa::VerifyingKey {
-    fn from_bytes(bytes: PublicKeyBytes) -> Result<Self> {
-        Ok(k256::ecdsa::VerifyingKey::from_sec1_bytes(&bytes)?)
-    }
-
-    fn to_bytes(&self) -> PublicKeyBytes {
-        self.to_bytes()
-            .as_slice()
-            .try_into()
-            .expect("malformed key")
-    }
-
-    fn derive_child(&self, other: PrivateKeyBytes) -> Result<Self> {
-        k256::PublicKey::from(self)
-            .derive_child(other)
-            .map(Into::into)
-    }
-}
-*/
-
 impl PublicKey for libsecp256k1::PublicKey{
     fn from_bytes(bytes: PublicKeyBytes) -> Result<Self> {
         match libsecp256k1::PublicKey::parse_compressed(&bytes){
@@ -111,23 +67,6 @@ impl From<&XPub> for libsecp256k1::PublicKey {
         *xpub.public_key()
     }
 }
-
-/*
-impl From<XPub> for k256::ecdsa::VerifyingKey {
-    fn from(xpub: XPub) -> k256::ecdsa::VerifyingKey {
-        k256::ecdsa::VerifyingKey::from(&xpub)
-    }
-}
-
-
-impl From<&XPub> for k256::ecdsa::VerifyingKey {
-    fn from(xpub: &XPub) -> k256::ecdsa::VerifyingKey {
-        *xpub.public_key()
-    }
-}
-
- */
-
 
 
 #[cfg(test)]

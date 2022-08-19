@@ -152,6 +152,23 @@ impl Language {
         }
     }
 
+    pub fn from_phrase(phrase: &str) -> Option<Self> {
+        match phrase.split_whitespace().into_iter().next() {
+            Some(word) => {
+                if lazy::WORDMAP_ENGLISH.get_bits(word).is_ok() {
+                    Some(Language::English)
+                }
+                else if lazy::WORDMAP_CHINESE_SIMPLIFIED.get_bits(word).is_ok() {
+                    Some(Language::ChineseSimplified)
+                }
+                else {
+                    None
+                }
+            },
+            _ => None
+        }
+    }
+
     /// Get the word list for this language
     pub fn wordlist(&self) -> &'static WordList {
         match *self {
@@ -376,5 +393,11 @@ mod test {
     #[cfg_attr(not(target_arch = "wasm32"), test)]
     fn from_invalid_language_code() {
         assert_eq!(Language::from_language_code("not a real language"), None);
+    }
+
+    #[test]
+    fn test_ffrom_phrase(){
+        let language = Language::from_phrase("heavy face learn track claw jaguar pigeon uncle seven enough glow where");
+        assert_eq!(Some(Language::English),language);
     }
 }

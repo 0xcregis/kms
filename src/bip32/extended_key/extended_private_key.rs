@@ -26,7 +26,6 @@ const BIP39_DOMAIN_SEPARATOR: [u8; 12] = [
 ];
 
 /// Extended private secp256k1 ECDSA signing key.
-// pub type XPrv = ExtendedPrivateKey<k256::ecdsa::SigningKey>;
 pub type XPrv = ExtendedPrivateKey<libsecp256k1::SecretKey>;
 /// Extended private keys derived using BIP32.
 ///
