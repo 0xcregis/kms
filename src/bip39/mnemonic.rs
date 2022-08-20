@@ -49,7 +49,7 @@ impl Mnemonic {
     /// # Example
     ///
     /// ```
-    /// use bip39::{Mnemonic, MnemonicType, Language};
+    /// use hds::bip39::{Mnemonic, MnemonicType, Language};
     ///
     /// let mnemonic = Mnemonic::new(MnemonicType::Words12, Language::English);
     /// let phrase = mnemonic.phrase();
@@ -72,7 +72,7 @@ impl Mnemonic {
     /// # Example
     ///
     /// ```
-    /// use bip39::{Mnemonic, MnemonicType, Language};
+    /// use hds::bip39::{Mnemonic, MnemonicType, Language};
     ///
     /// let entropy = &[0x33, 0xE4, 0x6B, 0xB1, 0x3A, 0x74, 0x6E, 0xA4, 0x1C, 0xDD, 0xE4, 0x5C, 0x90, 0x84, 0x6A, 0x79];
     /// let mnemonic = Mnemonic::from_entropy(entropy, Language::English).unwrap();
@@ -129,7 +129,7 @@ impl Mnemonic {
     /// # Example
     ///
     /// ```
-    /// use bip39::{Mnemonic, Language};
+    /// use hds::bip39::{Mnemonic, Language};
     ///
     /// let phrase = "park remain person kitchen mule spell knee armed position rail grid ankle";
     /// let mnemonic = Mnemonic::from_phrase(phrase, Language::English).unwrap();
@@ -166,7 +166,7 @@ impl Mnemonic {
     /// # Example
     ///
     /// ```
-    /// use bip39::{Mnemonic, Language};
+    /// use hds::bip39::{Mnemonic, Language};
     ///
     /// let test_mnemonic = "park remain person kitchen mule spell knee armed position rail grid ankle";
     ///
@@ -235,7 +235,7 @@ impl Mnemonic {
     /// # Example
     ///
     /// ```
-    /// use bip39::{Mnemonic, Language};
+    /// use hds::bip39::{Mnemonic, Language};
     ///
     /// let phrase = "park remain person kitchen mule spell knee armed position rail grid ankle";
     ///

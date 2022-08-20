@@ -114,9 +114,10 @@ impl Drop for ExtendedKey {
 
 #[cfg(test)]
 mod tests {
-    use crate::bip32::ExtendedKey;
+    use crate::bip32::{ExtendedKey, XPrv};
     use alloc::string::ToString;
     use hex_literal::hex;
+    use crate::bip32::Prefix;
 
     #[test]
     fn bip32_test_vector_1_xprv() {
@@ -179,5 +180,12 @@ mod tests {
         let xprv_base58_2 = "xprv9s21ZrQH143K4UgTbVuwLxTrB8u488uJxogG9CA7eAEL7hmcPtyG7zT8BtpmvibJQ8q1nxnXRUpQAo1BVa9tbvXery13KY1dSsC5A155c5k";
         let xprv2 = xprv_base58_2.parse::<ExtendedKey>().unwrap();
         debug_extend_key(&xprv2);
+    }
+
+    #[test]
+    fn test_xprv(){
+        let seed = hex::decode("4b381541583be4423346c643850da4b320e46a87ae3d2a4e6da11eba819cd4acba45d239319ac14f863b8d5ab5a0d0c64d2e8a1e7d1457df2e5a3c51c73235be").unwrap();
+        let xprv = XPrv::new(seed).unwrap();
+        println!("{}",xprv.to_extended_key(Prefix::XPRV).to_string());
     }
 }

@@ -20,7 +20,7 @@ const ENTROPY_OFFSET: usize = 8;
 /// passing arbitrary `usize` values:
 ///
 /// ```
-/// use bip39::{MnemonicType};
+/// use hds::bip39::{MnemonicType};
 ///
 /// let mnemonic_type = MnemonicType::for_key_size(128).unwrap();
 /// ```
@@ -47,7 +47,7 @@ impl MnemonicType {
     ///
     /// # Example
     /// ```
-    /// use bip39::{MnemonicType};
+    /// use hds::bip39::{MnemonicType};
     ///
     /// let mnemonic_type = MnemonicType::for_word_count(12).unwrap();
     /// ```
@@ -71,7 +71,7 @@ impl MnemonicType {
     ///
     /// # Example
     /// ```
-    /// use bip39::{MnemonicType};
+    /// use hds::bip39::{MnemonicType};
     ///
     /// let mnemonic_type = MnemonicType::for_key_size(128).unwrap();
     /// ```
@@ -99,7 +99,7 @@ impl MnemonicType {
     ///
     /// # Example
     /// ```
-    /// use bip39::{MnemonicType};
+    /// use hds::bip39::{MnemonicType};
     ///
     /// let test_mnemonic = "park remain person kitchen mule spell knee armed position rail grid ankle";
     ///
@@ -120,7 +120,7 @@ impl MnemonicType {
     ///
     /// # Example
     /// ```
-    /// use bip39::{MnemonicType};
+    /// use hds::bip39::{MnemonicType};
     ///
     /// let test_mnemonic = "park remain person kitchen mule spell knee armed position rail grid ankle";
     ///
@@ -137,7 +137,7 @@ impl MnemonicType {
     ///
     /// # Example
     /// ```
-    /// use bip39::{MnemonicType};
+    /// use hds::bip39::{MnemonicType};
     ///
     /// let test_mnemonic = "park remain person kitchen mule spell knee armed position rail grid ankle";
     ///
@@ -154,7 +154,7 @@ impl MnemonicType {
     ///
     /// # Example
     /// ```
-    /// use bip39::{MnemonicType};
+    /// use hds::bip39::{MnemonicType};
     ///
     /// let test_mnemonic = "park remain person kitchen mule spell knee armed position rail grid ankle";
     ///
@@ -171,7 +171,7 @@ impl MnemonicType {
     ///
     /// # Example
     /// ```
-    /// use bip39::{MnemonicType};
+    /// use hds::bip39::{MnemonicType};
     ///
     /// let mnemonic_type = MnemonicType::Words12;
     ///
