@@ -26,6 +26,7 @@ subtle = { version = "2", default-features = false }
 ripemd = "0.1.1"
 hex = "0.4.2"
 libsecp256k1 = { version = "0.7.1"}
+encoding = "0.2.33"
 
 [dev-dependencies]
 hex-literal = "0.3"

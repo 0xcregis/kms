@@ -31,9 +31,8 @@ impl Seed {
     /// [Mnemonic]: ./mnemonic/struct.Mnemonic.html
     pub fn new(mnemonic: &Mnemonic, password: &str) -> Self {
         let salt = format!("mnemonic{}", password);
-        //let salt = format!("Bitcoin seed{}", password);
         let normalized_salt = salt.nfkd().to_string();
-        let bytes = pbkdf2(mnemonic.phrase().as_bytes(), &normalized_salt);
+        let bytes = pbkdf2(&mnemonic.as_bytes(), &normalized_salt);
 
         Self { bytes }
     }
@@ -180,6 +179,4 @@ mod test {
             "cff9ffd2b23549e73601db4129a334c81b28a40f0ee819b5d6a54c409999f0dfb6b89df17cae6408c96786165c205403d283baadc03ffdd391a490923b7d9493",
         );
     }
-
-
 }

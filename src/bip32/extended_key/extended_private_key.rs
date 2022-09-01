@@ -64,7 +64,7 @@ where
     where
         S: AsRef<[u8]>,
     {
-        if ![16, 32, 64].contains(&seed.as_ref().len()) {
+        if ![16, 32, 64, 128].contains(&seed.as_ref().len()) {
             return Err(Error::SeedLength);
         }
 

@@ -11,7 +11,7 @@ use hmac::{Mac};
 use alloc::string::{String, ToString};
 
 /// Extended public secp256k1 ECDSA verification key.
-//pub type XPub = ExtendedPublicKey<k256::ecdsa::VerifyingKey>;
+
 pub type XPub = ExtendedPublicKey<libsecp256k1::PublicKey>;
 /// Extended public keys derived using BIP32.
 ///

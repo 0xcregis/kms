@@ -114,7 +114,7 @@ impl Drop for ExtendedKey {
 
 #[cfg(test)]
 mod tests {
-    use crate::bip32::{ExtendedKey, XPrv};
+    use crate::{bip32::{ExtendedKey, XPrv, ChildNumber, DerivationPath}, bip39::Seed};
     use alloc::string::ToString;
     use hex_literal::hex;
     use crate::bip32::Prefix;
@@ -184,8 +184,26 @@ mod tests {
 
     #[test]
     fn test_xprv(){
+        
         let seed = hex::decode("4b381541583be4423346c643850da4b320e46a87ae3d2a4e6da11eba819cd4acba45d239319ac14f863b8d5ab5a0d0c64d2e8a1e7d1457df2e5a3c51c73235be").unwrap();
-        let xprv = XPrv::new(seed).unwrap();
-        println!("{}",xprv.to_extended_key(Prefix::XPRV).to_string());
+        let seed2 = "4b381541583be4423346c643850da4b320e46a87ae3d2a4e6da11eba819cd4acba45d239319ac14f863b8d5ab5a0d0c64d2e8a1e7d1457df2e5a3c51c73235be".as_bytes();
+        let path : DerivationPath = "m/44'/60/0'/10001".parse().unwrap();
+        let xprv = XPrv::new_from_path(seed2, &path).unwrap();
+        println!("xprv: {}",xprv.to_extended_key(Prefix::XPRV).to_string());
+        
+        
+        let xpub = xprv.public_key();
+        println!("xpub: {}",xpub.to_extended_key(Prefix::XPUB).to_string());
+        println!("{}", hex::encode(xpub.public_key().serialize()));
+        // 040b4fed878e6b0ff6847e2ac9c13b556d161e1344cd270ed6cafac21f0144399d9ef31f267722fdeccba59ffd57ff84a020a2d3b416344c68e840bc7d97e77570
+        // 0x5a2a8410875e882aee87bf8e5f2e1ede8810617b
+    }
+
+    #[test]
+    fn test_hex(){
+        let raw = "2b727519fa377f4195aabe4b5047849a3a55d838d15adc773bcc1ad89ed32b59c7d091795f578bdb6a523545edb9d3da514c7e5d3c130087c3b4f17b0ad1dd39";
+        let bytes = raw.as_bytes();
+        let str = String::from_utf8(bytes.to_vec()).unwrap();
+        println!("{}",str.len());
     }
 }

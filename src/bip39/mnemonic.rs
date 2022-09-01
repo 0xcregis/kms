@@ -8,6 +8,8 @@ use super::ErrorKind;
 use super::Language;
 use super::MnemonicType;
 use super::util::{checksum, BitWriter, IterExt};
+use encoding::codec::simpchinese::*;
+use encoding::Encoding;
 
 /// The primary type in this crate, most tasks require creating or using one.
 ///
@@ -255,6 +257,19 @@ impl Mnemonic {
     /// [Language]: ../language/struct.Language.html
     pub fn language(&self) -> Language {
         self.lang
+    }
+
+    pub fn as_bytes(&self) -> Vec<u8>{
+        //use GBK encoding if language is zh-cn
+        if self.lang == Language::ChineseSimplified {
+            let mut d = GB18030_ENCODING.raw_encoder();
+            let mut bytes = Vec::<u8>::new();
+            d.raw_feed(&self.phrase, &mut bytes);
+            bytes
+        }
+        else {
+            self.phrase().as_bytes().to_vec()
+        }
     }
 }
 

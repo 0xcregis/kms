@@ -7,6 +7,7 @@ extern crate std;
 pub mod bip39;
 pub mod bip32;
 pub mod error;
+pub mod crypto;
 
 use error::Error;
 
@@ -22,7 +23,7 @@ pub fn ecdsa_sign(secret: &libsecp256k1::SecretKey, bytes: &[u8]) -> Result<([u8
 mod tests {
     use crate::bip39::{Mnemonic, Language, MnemonicType, Seed};
     use crate::bip32::{XPrv,XPub,DerivationPath, Prefix, ChildNumber};
-    
+    use super::ecdsa_sign;
 
     #[test]
     fn test_mnemonic() {
@@ -99,5 +100,16 @@ mod tests {
         
         println!("{}",xpub.to_string(Prefix::XPUB));
         // xpub6BpaER2tMZzYkPttmAhbbtd6MRyKtPTaPrEbyXHwkjM7G9ySmv81pGqaVBXF3A1UfbL7VpMhdigyZ1Fz17nQNwFJqkzEye6xKcsiPj2uTDZ
+    }
+
+    #[test]
+    fn test_sign(){
+        let raw_tx = "0a0218902208f87d110a81d815b940d5f1aefcac305a67080112630a2d747970652e676f6f676c65617069732e636f6d2f70726f746f636f6c2e5472616e73666572436f6e747261637412320a1541fa3146ab779ce02392d11209f524ee75d4088a45121541436d74fc1577266b7290b85801145d9c5287e19418c0843d70f59cabfcac30900180ade204";
+        let key = "78f87805449d8e7179581df9f9f3619e5e30fa04f9a24b1d5c8766c12be1f0f0";
+        let key_bytes = hex::decode(key).unwrap();
+        println!("{}",key_bytes.len());
+        let secret = libsecp256k1::SecretKey::parse_slice(&key_bytes).unwrap();
+        let bytes = hex::decode(raw_tx).unwrap();
+        let (signature,recid) = ecdsa_sign(&secret, &bytes).unwrap();
     }
 }
