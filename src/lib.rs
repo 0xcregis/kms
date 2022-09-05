@@ -63,30 +63,6 @@ mod tests {
         println!("xprv:{:}",xprv.to_string(Prefix::XPRV).as_str());
     }
     
-    #[test]
-    fn test_match_bipay () {
-        let phrase = "deal pretty baby midnight federal capital suggest cheese creek mutual boil shine";
-        let mnemonic = Mnemonic::from_phrase(phrase,Language::English).unwrap();
-        //let phrase = mnemonic.phrase();
-        let seed = Seed::new(&mnemonic, "");
-        assert_eq!("c8a2127631be42ff32632edb7af2317ca9a17a04803c031f1411b1942c427d1fb643ef7764b1d856e58568d12d54f49a255464922bb3784accd527ffa82242d1",format!("{:x}",seed));
-        let xprv = XPrv::new(seed).unwrap();
-        //assert_eq!("xprv9s21ZrQH143K3BMzbzRA1EtW4bTSDzvzPWeyUjjw6DdBGwM3GDNgd7wyAmy8R6KayQHRuTVQG4yvACbv4HLsyc9BPEGzu8GtYFTZTdncGnJ",xprv.to_extended_key(Prefix::XPRV).to_string())
-    }
-
-    #[test]
-    fn test_import_xprv(){
-        let xprv_str = "xprv9s21ZrQH143K3BMzbzRA1EtW4bTSDzvzPWeyUjjw6DdBGwM3GDNgd7wyAmy8R6KayQHRuTVQG4yvACbv4HLsyc9BPEGzu8GtYFTZTdncGnJ";
-        let xp : XPrv = xprv_str.parse().unwrap();
-        /*println!("{:}",xp.to_string(Prefix::XPRV).as_str());
-        println!("attr:{:?}",xp.attrs());
-
-        let path: DerivationPath = "m/44'/196'/0'/0/0".parse().unwrap();
-        
-        let child = xp.derive_from_path(&path).unwrap();*/
-        let xpub = xp.public_key();
-        println!("pub:{}",xpub.to_extended_key(Prefix::XPUB).to_string());
-    }
 
     #[test]
     fn test_xpub(){
@@ -102,14 +78,4 @@ mod tests {
         // xpub6BpaER2tMZzYkPttmAhbbtd6MRyKtPTaPrEbyXHwkjM7G9ySmv81pGqaVBXF3A1UfbL7VpMhdigyZ1Fz17nQNwFJqkzEye6xKcsiPj2uTDZ
     }
 
-    #[test]
-    fn test_sign(){
-        let raw_tx = "0a0218902208f87d110a81d815b940d5f1aefcac305a67080112630a2d747970652e676f6f676c65617069732e636f6d2f70726f746f636f6c2e5472616e73666572436f6e747261637412320a1541fa3146ab779ce02392d11209f524ee75d4088a45121541436d74fc1577266b7290b85801145d9c5287e19418c0843d70f59cabfcac30900180ade204";
-        let key = "78f87805449d8e7179581df9f9f3619e5e30fa04f9a24b1d5c8766c12be1f0f0";
-        let key_bytes = hex::decode(key).unwrap();
-        println!("{}",key_bytes.len());
-        let secret = libsecp256k1::SecretKey::parse_slice(&key_bytes).unwrap();
-        let bytes = hex::decode(raw_tx).unwrap();
-        let (signature,recid) = ecdsa_sign(&secret, &bytes).unwrap();
-    }
 }
