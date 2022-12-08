@@ -1,5 +1,5 @@
-# HDS
-Hierarchical Determinative Schema
+# KMS
+Key Management Schema
 ## Introduction
 Rust implementation of BIP32、BIP39
 
