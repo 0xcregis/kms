@@ -13,7 +13,7 @@ use error::Error;
 
 pub fn ecdsa_sign(secret: &libsecp256k1::SecretKey, bytes: &[u8]) -> Result<([u8;64],u8), Error> {
     let message = libsecp256k1::Message::parse_slice(bytes)?;
-    let (signature,recid) = libsecp256k1::sign(&message, secret);
+    let (signature, recid) = libsecp256k1::sign(&message, secret);
     let signature = signature.serialize();
     Ok((signature,recid.into()))
 }
@@ -22,7 +22,7 @@ pub fn ecdsa_sign(secret: &libsecp256k1::SecretKey, bytes: &[u8]) -> Result<([u8
 #[cfg(test)]
 mod tests {
     use crate::bip39::{Mnemonic, Language, MnemonicType, Seed};
-    use crate::bip32::{XPrv,XPub,DerivationPath, Prefix, ChildNumber};
+    use crate::bip32::{XPrv, XPub, DerivationPath, Prefix, ChildNumber};
     use super::ecdsa_sign;
 
     #[test]

@@ -45,13 +45,13 @@ impl PrivateKey for libsecp256k1::SecretKey {
 
     fn derive_child(&self, other: PrivateKeyBytes) -> Result<Self> {
         let mut cpk = self.clone();
-        match cpk.tweak_add_assign(&libsecp256k1::SecretKey::parse(&other).unwrap()){
+        match cpk.tweak_add_assign(&libsecp256k1::SecretKey::parse(&other).unwrap()) {
             Ok(_) => Ok(cpk),
             Err(_) => Err(Error::Crypto)
         }
     }
 
-    fn public_key(&self) -> Self::PublicKey{
+    fn public_key(&self) -> Self::PublicKey {
         libsecp256k1::PublicKey::from_secret_key(&self)
     }
 

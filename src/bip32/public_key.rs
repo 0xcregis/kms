@@ -34,7 +34,7 @@ pub trait PublicKey: Sized {
     }
 }
 
-impl PublicKey for libsecp256k1::PublicKey{
+impl PublicKey for libsecp256k1::PublicKey {
     fn from_bytes(bytes: PublicKeyBytes) -> Result<Self> {
         match libsecp256k1::PublicKey::parse_compressed(&bytes){
             Ok(pubkey) => Ok(pubkey),
@@ -60,7 +60,6 @@ impl From<XPub> for libsecp256k1::PublicKey {
         libsecp256k1::PublicKey::from(&xpub)
     }
 }
-
 
 impl From<&XPub> for libsecp256k1::PublicKey {
     fn from(xpub: &XPub) ->libsecp256k1::PublicKey {
