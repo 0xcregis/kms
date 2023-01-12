@@ -1,11 +1,13 @@
 //! Extended public keys
 
 use crate::bip32::{
-    ChildNumber, Error, ExtendedKey, ExtendedKeyAttrs, ExtendedPrivateKey, HmacSha512,
-    KeyFingerprint, Prefix, PrivateKey, PublicKey, PublicKeyBytes, Result, KEY_SIZE,
+    DerivationPath, ChildNumber, Error, ExtendedKey, ExtendedKeyAttrs, ExtendedPrivateKey,
+    HmacSha512, KeyFingerprint, Prefix, PrivateKey, PublicKey, PublicKeyBytes, Result, KEY_SIZE,
 };
 use core::str::FromStr;
 use hmac::{Mac};
+
+
 
 #[cfg(feature = "alloc")]
 use alloc::string::{String, ToString};
@@ -45,6 +47,15 @@ where
     /// Compute a 4-byte key fingerprint for this extended public key.
     pub fn fingerprint(&self) -> KeyFingerprint {
         self.public_key().fingerprint()
+    }
+
+    pub fn derive_from_path(self, path: &DerivationPath) -> Result<Self> {
+        path.iter().fold(
+            Ok(self),
+            |maybe_key, child_num| {
+                maybe_key.and_then(|key| key.derive_child(child_num))
+            }
+        )
     }
 
     /// Derive a child key for a particular [`ChildNumber`].
