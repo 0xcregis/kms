@@ -1,17 +1,16 @@
+mod crypto;
 mod error;
 mod language;
 mod mnemonic;
 mod mnemonic_type;
 mod seed;
 mod util;
-mod crypto;
 
 pub use error::ErrorKind;
 pub use language::Language;
 pub use mnemonic::Mnemonic;
 pub use mnemonic_type::MnemonicType;
 pub use seed::Seed;
-
 
 /**
  * BIP39 standard test vectors
@@ -20,7 +19,7 @@ pub use seed::Seed;
 #[cfg(test)]
 mod test_mod {
     use super::*;
-    use crate::bip32::{XPrv, Prefix};
+    use crate::bip32::{Prefix, XPrv};
     const VECTORS: [[&str;4];24] = [
         [
             "00000000000000000000000000000000",
@@ -168,18 +167,17 @@ mod test_mod {
         ]
 
     ];
-    
+
     #[test]
-    fn test_vectors(){
-        VECTORS.iter().for_each(|item|{
+    fn test_vectors() {
+        VECTORS.iter().for_each(|item| {
             let mnemonic = Mnemonic::from_phrase(item[1], Language::English).unwrap();
             let seed = Seed::new(&mnemonic, "TREZOR");
             assert_eq!(item[0], hex::encode(mnemonic.entropy()));
             assert_eq!(item[1], mnemonic.phrase());
-            assert_eq!(item[2], format!("{:x}",seed));
+            assert_eq!(item[2], format!("{:x}", seed));
             let xprv = XPrv::new(seed).unwrap();
             assert_eq!(item[3], xprv.to_extended_key(Prefix::XPRV).to_string());
         })
     }
-    
 }

@@ -1,15 +1,15 @@
-use std::fmt;
-use anyhow::Error;
-use std::mem;
-use unicode_normalization::UnicodeNormalization;
-use zeroize::Zeroizing;
 use super::crypto::{gen_random_bytes, sha256_first_byte};
+use super::util::{checksum, BitWriter, IterExt};
 use super::ErrorKind;
 use super::Language;
 use super::MnemonicType;
-use super::util::{checksum, BitWriter, IterExt};
+use anyhow::Error;
 use encoding::codec::simpchinese::*;
 use encoding::Encoding;
+use std::fmt;
+use std::mem;
+use unicode_normalization::UnicodeNormalization;
+use zeroize::Zeroizing;
 
 /// The primary type in this crate, most tasks require creating or using one.
 ///
@@ -109,12 +109,14 @@ impl Mnemonic {
         //
         // Given the entropy is of correct size, this ought to give us the correct word
         // count.
-        let phrase = Zeroizing::new(entropy
-            .iter()
-            .chain(Some(&checksum_byte))
-            .bits()
-            .map(|bits| wordlist.get_word(bits))
-            .join(" "));
+        let phrase = Zeroizing::new(
+            entropy
+                .iter()
+                .chain(Some(&checksum_byte))
+                .bits()
+                .map(|bits| wordlist.get_word(bits))
+                .join(" "),
+        );
 
         Mnemonic {
             phrase,
@@ -141,10 +143,12 @@ impl Mnemonic {
     ///
     /// [Mnemonic]: ../mnemonic/struct.Mnemonic.html
     pub fn from_phrase(phrase: &str, lang: Language) -> Result<Mnemonic, Error> {
-        let phrase = Zeroizing::new(phrase
-            .split_whitespace()
-            .map(|w| w.nfkd())
-            .join::<String>(" "));
+        let phrase = Zeroizing::new(
+            phrase
+                .split_whitespace()
+                .map(|w| w.nfkd())
+                .join::<String>(" "),
+        );
 
         // this also validates the checksum and phrase length before returning the entropy so we
         // can store it. We don't use the validate function here to avoid having a public API that
@@ -191,8 +195,8 @@ impl Mnemonic {
         // Preallocate enough space for the longest possible word list
         let mut bits = BitWriter::with_capacity(264);
 
-        for word in phrase.split(" ") {
-            bits.push(wordmap.get_bits(&word)?);
+        for word in phrase.split(' ') {
+            bits.push(wordmap.get_bits(word)?);
         }
 
         let mtype = MnemonicType::for_word_count(bits.len() / 11)?;
@@ -229,7 +233,7 @@ impl Mnemonic {
     pub fn into_phrase(mut self) -> String {
         // Create an empty string and swap values with the mnemonic's phrase.
         // This allows `Mnemonic` to implement `Drop`, while still returning the phrase.
-        mem::replace(&mut self.phrase, String::new())
+        mem::take(&mut self.phrase)
     }
 
     /// Get the original entropy value of the mnemonic phrase as a slice.
@@ -259,15 +263,14 @@ impl Mnemonic {
         self.lang
     }
 
-    pub fn as_bytes(&self) -> Vec<u8>{
+    pub fn as_bytes(&self) -> Vec<u8> {
         //use GBK encoding if language is zh-cn
         if self.lang == Language::ChineseSimplified {
             let mut d = GB18030_ENCODING.raw_encoder();
             let mut bytes = Vec::<u8>::new();
             d.raw_feed(&self.phrase, &mut bytes);
             bytes
-        }
-        else {
+        } else {
             self.phrase().as_bytes().to_vec()
         }
     }

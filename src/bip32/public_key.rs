@@ -6,7 +6,6 @@ use sha2::{Digest, Sha256};
 
 use crate::bip32::XPub;
 
-
 use crate::bip32::Error;
 
 /// Bytes which represent a public key.
@@ -29,28 +28,28 @@ pub trait PublicKey: Sized {
     ///
     /// Default implementation uses `RIPEMD160(SHA256(public_key))`.
     fn fingerprint(&self) -> KeyFingerprint {
-        let digest = Ripemd160::digest(&Sha256::digest(&self.to_bytes()));
+        let digest = Ripemd160::digest(Sha256::digest(self.to_bytes()));
         digest[..4].try_into().expect("digest truncated")
     }
 }
 
 impl PublicKey for libsecp256k1::PublicKey {
     fn from_bytes(bytes: PublicKeyBytes) -> Result<Self> {
-        match libsecp256k1::PublicKey::parse_compressed(&bytes){
+        match libsecp256k1::PublicKey::parse_compressed(&bytes) {
             Ok(pubkey) => Ok(pubkey),
-            Err(_) => Err(Error::Crypto)
+            Err(_) => Err(Error::Crypto),
         }
     }
 
     fn to_bytes(&self) -> PublicKeyBytes {
-        libsecp256k1::PublicKey::serialize_compressed(&self)
+        libsecp256k1::PublicKey::serialize_compressed(self)
     }
 
     fn derive_child(&self, other: PrivateKeyBytes) -> Result<Self> {
-        let mut cpk = self.clone();
-        match cpk.tweak_add_assign(&libsecp256k1::SecretKey::parse(&other).unwrap()){
+        let mut cpk = *self;
+        match cpk.tweak_add_assign(&libsecp256k1::SecretKey::parse(&other).unwrap()) {
             Ok(_) => Ok(cpk),
-            Err(_) => Err(Error::Crypto)
+            Err(_) => Err(Error::Crypto),
         }
     }
 }
@@ -62,11 +61,10 @@ impl From<XPub> for libsecp256k1::PublicKey {
 }
 
 impl From<&XPub> for libsecp256k1::PublicKey {
-    fn from(xpub: &XPub) ->libsecp256k1::PublicKey {
+    fn from(xpub: &XPub) -> libsecp256k1::PublicKey {
         *xpub.public_key()
     }
 }
-
 
 #[cfg(test)]
 mod tests {

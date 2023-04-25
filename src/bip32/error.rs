@@ -47,7 +47,6 @@ impl Display for Error {
     }
 }
 
-
 impl std::error::Error for Error {}
 
 impl From<bs58::decode::Error> for Error {
@@ -68,22 +67,21 @@ impl From<core::array::TryFromSliceError> for Error {
     }
 }
 
-
 /*
 impl From<digest::InvalidKeyLength> for Error {
     fn from(_: hmac::crypto_mac::InvalidKeyLength) -> Error {
         Error::Crypto
     }
-    
+
 }
  */
 
-impl From<InvalidLength> for Error{
-    fn from(_:InvalidLength) -> Error{
+impl From<InvalidLength> for Error {
+    fn from(_: InvalidLength) -> Error {
         Error::Crypto
     }
 }
-/* 
+/*
 impl From<k256::elliptic_curve::Error> for Error {
     fn from(_: k256::elliptic_curve::Error) -> Error {
         Error::Crypto
@@ -99,7 +97,7 @@ impl From<k256::ecdsa::Error> for Error {
 */
 
 impl From<libsecp256k1::Error> for Error {
-    fn from(_:libsecp256k1::Error) -> Error {
+    fn from(_: libsecp256k1::Error) -> Error {
         Error::Crypto
     }
 }

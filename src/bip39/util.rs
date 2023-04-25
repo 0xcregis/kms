@@ -2,9 +2,9 @@ use unicode_normalization::Decompositions;
 
 pub(crate) trait IterExt: Iterator {
     fn join<R>(&mut self, glue: &str) -> R
-        where
-            R: From<String>,
-            Self::Item: Joinable,
+    where
+        R: From<String>,
+        Self::Item: Joinable,
     {
         let first = match self.next() {
             Some(first) => first,
@@ -26,10 +26,10 @@ pub(crate) trait IterExt: Iterator {
     }
 
     fn bits<Out>(self) -> BitIter<Self::Item, Out, Self>
-        where
-            Out: Bits,
-            Self::Item: Bits,
-            Self: Sized,
+    where
+        Out: Bits,
+        Self::Item: Bits,
+        Self: Sized,
     {
         BitIter::new(self)
     }
@@ -155,13 +155,13 @@ pub(crate) struct BitIter<In: Bits, Out: Bits, I: Iterator<Item = In> + Sized> {
 }
 
 impl<In, Out, I> BitIter<In, Out, I>
-    where
-        In: Bits,
-        Out: Bits,
-        I: Iterator<Item = In>,
+where
+    In: Bits,
+    Out: Bits,
+    I: Iterator<Item = In>,
 {
     fn new(source: I) -> Self {
-        let source = source.into_iter();
+        let source = source;
 
         BitIter {
             _phantom: ::std::marker::PhantomData,
@@ -173,10 +173,10 @@ impl<In, Out, I> BitIter<In, Out, I>
 }
 
 impl<In, Out, I> Iterator for BitIter<In, Out, I>
-    where
-        In: Bits,
-        Out: Bits + From<u16>,
-        I: Iterator<Item = In>,
+where
+    In: Bits,
+    Out: Bits + From<u16>,
+    I: Iterator<Item = In>,
 {
     type Item = Out;
 

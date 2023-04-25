@@ -13,7 +13,6 @@ use hmac::Mac;
 use subtle::{Choice, ConstantTimeEq};
 use zeroize::Zeroize;
 
-
 use {
     crate::bip32::DerivationPath,
     alloc::string::{String, ToString},
@@ -49,7 +48,7 @@ where
     pub const MAX_DEPTH: Depth = u8::MAX;
 
     /// Derive a child key from the given [`DerivationPath`].
-    
+
     pub fn new_from_path<S>(seed: S, path: &DerivationPath) -> Result<Self>
     where
         S: AsRef<[u8]>,
@@ -85,12 +84,9 @@ where
     }
 
     pub fn derive_from_path(self, path: &DerivationPath) -> Result<Self> {
-        path.iter().fold(
-            Ok(self),
-            |maybe_key, child_num| {
-                maybe_key.and_then(|key| key.derive_child(child_num))
-            }
-        )
+        path.iter().fold(Ok(self), |maybe_key, child_num| {
+            maybe_key.and_then(|key| key.derive_child(child_num))
+        })
     }
 
     /// Derive a child key for a particular [`ChildNumber`].

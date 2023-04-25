@@ -1,13 +1,11 @@
 //! Extended public keys
 
 use crate::bip32::{
-    DerivationPath, ChildNumber, Error, ExtendedKey, ExtendedKeyAttrs, ExtendedPrivateKey,
+    ChildNumber, DerivationPath, Error, ExtendedKey, ExtendedKeyAttrs, ExtendedPrivateKey,
     HmacSha512, KeyFingerprint, Prefix, PrivateKey, PublicKey, PublicKeyBytes, Result, KEY_SIZE,
 };
 use core::str::FromStr;
-use hmac::{Mac};
-
-
+use hmac::Mac;
 
 #[cfg(feature = "alloc")]
 use alloc::string::{String, ToString};
@@ -50,12 +48,9 @@ where
     }
 
     pub fn derive_from_path(self, path: &DerivationPath) -> Result<Self> {
-        path.iter().fold(
-            Ok(self),
-            |maybe_key, child_num| {
-                maybe_key.and_then(|key| key.derive_child(child_num))
-            }
-        )
+        path.iter().fold(Ok(self), |maybe_key, child_num| {
+            maybe_key.and_then(|key| key.derive_child(child_num))
+        })
     }
 
     /// Derive a child key for a particular [`ChildNumber`].

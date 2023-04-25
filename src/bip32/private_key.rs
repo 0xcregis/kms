@@ -28,35 +28,32 @@ pub trait PrivateKey: Sized {
     fn public_key(&self) -> Self::PublicKey;
 }
 
-
 impl PrivateKey for libsecp256k1::SecretKey {
     type PublicKey = libsecp256k1::PublicKey;
 
-    fn from_bytes(bytes: &PrivateKeyBytes) -> Result<Self>{
-        match libsecp256k1::SecretKey::parse(bytes){
+    fn from_bytes(bytes: &PrivateKeyBytes) -> Result<Self> {
+        match libsecp256k1::SecretKey::parse(bytes) {
             Ok(sk) => Ok(sk),
-            Err(_) => Err(Error::Crypto)
+            Err(_) => Err(Error::Crypto),
         }
     }
 
     fn to_bytes(&self) -> PrivateKeyBytes {
-        libsecp256k1::SecretKey::serialize(&self)
+        libsecp256k1::SecretKey::serialize(self)
     }
 
     fn derive_child(&self, other: PrivateKeyBytes) -> Result<Self> {
-        let mut cpk = self.clone();
+        let mut cpk = *self;
         match cpk.tweak_add_assign(&libsecp256k1::SecretKey::parse(&other).unwrap()) {
             Ok(_) => Ok(cpk),
-            Err(_) => Err(Error::Crypto)
+            Err(_) => Err(Error::Crypto),
         }
     }
 
     fn public_key(&self) -> Self::PublicKey {
-        libsecp256k1::PublicKey::from_secret_key(&self)
+        libsecp256k1::PublicKey::from_secret_key(self)
     }
-
 }
-
 
 impl From<XPrv> for libsecp256k1::SecretKey {
     fn from(xprv: XPrv) -> libsecp256k1::SecretKey {
@@ -64,10 +61,9 @@ impl From<XPrv> for libsecp256k1::SecretKey {
     }
 }
 
-
 impl From<&XPrv> for libsecp256k1::SecretKey {
     fn from(xprv: &XPrv) -> libsecp256k1::SecretKey {
-        xprv.private_key().clone()
+        *xprv.private_key()
     }
 }
 

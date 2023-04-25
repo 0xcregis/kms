@@ -1,6 +1,5 @@
-
-use super::ErrorKind;
 use super::util::{Bits, Bits11};
+use super::ErrorKind;
 use rustc_hash::FxHashMap;
 
 pub struct WordMap {
@@ -26,10 +25,9 @@ impl WordList {
     }
 
     pub fn get_words_by_prefix(&self, prefix: &str) -> &[&'static str] {
-        let start = self.inner
-            .binary_search(&prefix)
-            .unwrap_or_else(|idx| idx);
-        let count = self.inner[start..].iter()
+        let start = self.inner.binary_search(&prefix).unwrap_or_else(|idx| idx);
+        let count = self.inner[start..]
+            .iter()
             .take_while(|word| word.starts_with(prefix))
             .count();
 
@@ -111,8 +109,9 @@ mod lazy {
 ///
 /// [Mnemonic]: ./mnemonic/struct.Mnemonic.html
 /// [Seed]: ./seed/struct.Seed.html
-#[derive(Debug, Clone, Copy, PartialEq)]
+#[derive(Debug, Clone, Copy, PartialEq, Default)]
 pub enum Language {
+    #[default]
     English,
     ChineseSimplified,
     #[cfg(feature = "chinese-traditional")]
@@ -153,19 +152,17 @@ impl Language {
     }
 
     pub fn from_phrase(phrase: &str) -> Option<Self> {
-        match phrase.split_whitespace().into_iter().next() {
+        match phrase.split_whitespace().next() {
             Some(word) => {
                 if lazy::WORDMAP_ENGLISH.get_bits(word).is_ok() {
                     Some(Language::English)
-                }
-                else if lazy::WORDMAP_CHINESE_SIMPLIFIED.get_bits(word).is_ok() {
+                } else if lazy::WORDMAP_CHINESE_SIMPLIFIED.get_bits(word).is_ok() {
                     Some(Language::ChineseSimplified)
-                }
-                else {
+                } else {
                     None
                 }
-            },
-            _ => None
+            }
+            _ => None,
         }
     }
 
@@ -213,12 +210,6 @@ impl Language {
     }
 }
 
-impl Default for Language {
-    fn default() -> Language {
-        Language::English
-    }
-}
-
 #[cfg(test)]
 mod test {
     use super::lazy;
@@ -232,7 +223,7 @@ mod test {
     fn words_by_prefix() {
         let wl = &lazy::WORDLIST_ENGLISH;
         let res = wl.get_words_by_prefix("woo");
-        assert_eq!(res, ["wood","wool"]);
+        assert_eq!(res, ["wood", "wool"]);
     }
 
     #[cfg_attr(all(target_arch = "wasm32"), wasm_bindgen_test)]
@@ -396,8 +387,10 @@ mod test {
     }
 
     #[test]
-    fn test_ffrom_phrase(){
-        let language = Language::from_phrase("heavy face learn track claw jaguar pigeon uncle seven enough glow where");
-        assert_eq!(Some(Language::English),language);
+    fn test_ffrom_phrase() {
+        let language = Language::from_phrase(
+            "heavy face learn track claw jaguar pigeon uncle seven enough glow where",
+        );
+        assert_eq!(Some(Language::English), language);
     }
 }

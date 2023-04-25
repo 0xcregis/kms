@@ -1,5 +1,5 @@
-use ripemd::{Ripemd160, Digest};
 use hex;
+use ripemd::{Digest, Ripemd160};
 
 pub fn ripemd(msg: &[u8]) -> String {
     // create a RIPEMD-160 hasher instance
