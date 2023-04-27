@@ -11,10 +11,10 @@ pub mod error;
 
 use error::Error;
 
-pub fn ecdsa_sign(secret: &libsecp256k1::SecretKey, bytes: &[u8]) -> Result<([u8; 64], u8), Error> {
+pub fn ecdsa_sign(secret: &libsecp256k1::SecretKey, bytes: &[u8]) -> Result<(Vec<u8>, u8), Error> {
     let message = libsecp256k1::Message::parse_slice(bytes)?;
     let (signature, recid) = libsecp256k1::sign(&message, secret);
-    let signature = signature.serialize();
+    let signature = signature.serialize_der().as_ref().to_vec();
     Ok((signature, recid.into()))
 }
 
