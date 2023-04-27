@@ -30,9 +30,8 @@ pub fn ecdsa_sign(
 
 #[cfg(test)]
 mod tests {
-    use super::ecdsa_sign;
     use crate::bip32::{ChildNumber, DerivationPath, Prefix, XPrv, XPub};
-    use crate::bip39::{Language, Mnemonic, MnemonicType, Seed};
+    use crate::bip39::{Language, Mnemonic, Seed};
 
     #[test]
     fn test_mnemonic() {
@@ -84,6 +83,5 @@ mod tests {
         let xpub: XPub = xprv.public_key();
 
         println!("{}", xpub.to_string(Prefix::XPUB));
-        // xpub6BpaER2tMZzYkPttmAhbbtd6MRyKtPTaPrEbyXHwkjM7G9ySmv81pGqaVBXF3A1UfbL7VpMhdigyZ1Fz17nQNwFJqkzEye6xKcsiPj2uTDZ
     }
 }
