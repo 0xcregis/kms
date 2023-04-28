@@ -20,9 +20,9 @@ pub fn ecdsa_sign(
     let (signature, recid) = libsecp256k1::sign(&message, secret_key);
 
     let signature = if is_der_encoded {
-        signature.serialize().to_vec()
-    } else {
         signature.serialize_der().as_ref().to_vec()
+    } else {
+        signature.serialize().to_vec()
     };
 
     Ok((signature, recid.into()))
